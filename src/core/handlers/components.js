@@ -1,36 +1,50 @@
 const fs = require("fs");
 const path = require("path");
 
-const { Collection } = require("discord.js");
+function readFiles(dir) {
+  let results = [];
+
+  const files = fs.readdirSync(dir, {
+    withFileTypes: true
+  });
+
+  for (const file of files) {
+    const filePath = path.join(dir, file.name);
+
+    if (file.isDirectory()) {
+      results.push(...readFiles(filePath));
+    } else if (file.name.endsWith(".js")) {
+      results.push(filePath);
+    }
+  }
+
+  return results;
+}
 
 module.exports = (client) => {
   try {
-    const componentsPath = path.join(__dirname, "../../components");
-    const folders = fs.readdirSync(componentsPath);
+    const componentsPath =
+      path.join(__dirname, "../../components");
 
-    folders.forEach((folder) => {
-      const folderPath = path.join(componentsPath, folder);
-      const files = fs.readdirSync(folderPath);
+    const files = readFiles(componentsPath);
 
-      files
-        .filter(file => file.endsWith(".js"))
-        .forEach((file) => {
-          const filePath = path.join(folderPath, file);
-          const component = require(filePath);
+    for (const filePath of files) {
+      const component = require(filePath);
 
-          if (!component?.name) return;
+      if (!component?.name) continue;
 
-          client.components.set(component.name, component);
-          
-          // Debug (if true)
-          client.debug(`COMPONENT set: ${JSON.stringify(component, null, 2)}`)
-        });
+      client.components.set(
+        component.name,
+        component
+      );
 
-    });
+      client.debug(
+        `COMPONENT set: ${component.name}`
+      );
+    }
 
     client.info("COMPONENTS carregados!");
   } catch (err) {
     client.error(err);
   }
-
 };
