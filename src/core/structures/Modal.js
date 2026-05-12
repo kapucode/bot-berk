@@ -1,6 +1,7 @@
 const {
   ModalBuilder,
-  ActionRowBuilder
+  TextDisplayBuilder,
+  LabelBuilder
 } = require('discord.js')
 
 class Modal {
@@ -13,8 +14,13 @@ class Modal {
     this.title =
       options.title || 'Sem título'
 
-    this.rows =
-      options.rows || []
+    this.components =
+      options.components || []
+    
+    this.textDisplay = options.textDisplay
+      ? new TextDisplayBuilder()
+          .setContent(options.textDisplay)
+      : null
   }
 
   setCustomId(customId) {
@@ -26,35 +32,86 @@ class Modal {
     this.title = title
     return this
   }
-
-  addComponents(...components) {
-    if (this.rows.length >= 5) {
+  
+  setTextDisplay(text) {
+    this.textDisplay = new TextDisplayBuilder()
+      .setContent(text)
+    
+    return this
+  }
+  
+  addFields(...fields) {
+    if (
+      this.components.length + fields.length > 5
+    ) {
       throw new Error(
         'Modal can only have 5 components.'
       )
     }
-    
-    for (const component of components) {
-
-      const row =
-        new ActionRowBuilder()
-          .addComponents(component)
-    
-      this.rows.push(row)
+  
+    const methods = {
+      TextInputBuilder: 'setTextInputComponent',
+      StringSelectMenuBuilder:
+        'setStringSelectMenuComponent',
+  
+      UserSelectMenuBuilder:
+        'setUserSelectMenuComponent',
+  
+      RoleSelectMenuBuilder:
+        'setRoleSelectMenuComponent',
+  
+      MentionableSelectMenuBuilder:
+        'setMentionableSelectMenuComponent',
+  
+      ChannelSelectMenuBuilder:
+        'setChannelSelectMenuComponent',
+  
+      FileUploadBuilder:
+        'setFileUploadComponent'
     }
-
+  
+    for (const field of fields) {
+      const label = new LabelBuilder()
+        .setLabel(field.label)
+  
+      if (field.description) {
+        label.setDescription(field.description)
+      }
+  
+      const component =
+        field.component
+  
+      const method =
+        methods[component.constructor.name]
+  
+      if (!method) {
+        throw new Error(
+          `Unsupported component: ${component.constructor.name}`
+        )
+      }
+  
+      label[method](component)
+  
+      this.components.push(label)
+    }
+  
     return this
   }
 
   build(interaction) {
 
-    const modal =
-      new ModalBuilder()
+    const modal = new ModalBuilder()
         .setCustomId(
           `${this.customId}:${interaction.user.id}`
         )
         .setTitle(this.title)
-        .addComponents(this.rows)
+    
+    if (this.textDisplay) {
+      modal.addTextDisplayComponents(this.textDisplay)
+    }
+    
+    modal.addLabelComponents(...this.components)
+    
 
     return modal
   }

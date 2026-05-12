@@ -1,16 +1,15 @@
 const {
-  SlashCommandBuilder,
   TextInputBuilder,
   TextInputStyle,
+  ActionRowBuilder
 } = require('discord.js')
-const Modal = require('@structures/Modal')
+const Modal = require('@structures/Modal.js')
+
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('modal_example')
-    .setDescription('Formulario'),
-  
-  run: async (client, interaction) => {
+  name: 'edit-feedback',
+  authorOnly: true,
+  execute: async (client, interaction) => {
     const modal = new Modal()
       .setCustomId('modal-feedback')
       .setTitle('Seu Feedback')
