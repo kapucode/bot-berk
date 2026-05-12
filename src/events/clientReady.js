@@ -2,6 +2,10 @@ module.exports = {
   name: 'clientReady',
   once: true,
   run: (client) => {
-    console.log(`Logged as ${client.user.username}`)
+    try {
+      client.info(`Logged as ${client.user.username}`)
+    } catch (err) {
+      client.error(err)
+    }
   }
 }

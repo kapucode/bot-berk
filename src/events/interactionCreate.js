@@ -29,12 +29,35 @@ async function handleCommand(client, interaction) {
         .catch(() => {})
     }
     
+    // Cooldown
+    if (command.cooldown) {
+      if (!Number.isInteger(command.cooldown.time)) throw new Error(`cooldown.time must be a Number!`)
+      
+      command.name = `${command.data.name}`
+      if (command.cooldown.scope !== "hybrid") {
+        command.name += '-slash'
+      }
+      
+      const cooldown =
+        client.cooldowns.check(
+          interaction,
+          command
+        )
+      
+      if (!cooldown.allowed) {
+        return client.cooldownMessage(
+          interaction,
+          cooldown.remaining
+        )
+      }
+    }
+  
     try {
       await command.run(client, interaction)
     } catch(err) {
       interaction.reply(`:x: **|** FALHA INTERNA.`)
         .catch(() => {})
-      console.log(err)
+      client.error(err)
     }
   }
 }
@@ -90,7 +113,7 @@ module.exports = {
       await handleInteraction(client, interaction)
     } catch (err) {
       interaction.reply(`:x: **|** FALHA INTERNA.`)
-      console.error(err)
+      client.error(err)
     }
   }
 }

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "node core/database/deploy-commands.js",
-    "delete": "node core/database/delete-commands.js"
+    "deploy": "node ./src/core/database/deploy-commands.js",
+    "delete": "node ./src/core/database/delete-commands.js"
   },
   "keywords": [],
   "author": "kapucode",
@@ -14,6 +14,20 @@
   "type": "commonjs",
   "dependencies": {
     "discord.js": "^14.26.4",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "module-alias": "^2.3.4",
+    "sharp": "^0.34.5"
+  },
+  "_moduleAliases": {
+    "@structures": "./src/core/structures",
+    "@handlers": "./src/core/handlers",
+    "@database": "./src/core/database",
+    "@utils": "./src/utils",
+    "@ui": "./src/ui"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
   }
 }

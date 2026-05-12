@@ -7,6 +7,11 @@ module.exports = {
     .setName('ping')
     .setDescription('Comando de ping'),
   
+  cooldown: {
+    time: 3000,
+    scope: 'hybrid'
+  },
+  
   run: async (client, interaction) => {
 
     interaction.reply({

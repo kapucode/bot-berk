@@ -28,18 +28,36 @@ async function handleCommand(client, message) {
     if (!client?.developers?.has?.(message.author.id)) return 
   }
   
+  // Cooldown
+  if (command.cooldown) {
+    if (!Number.isInteger(command.cooldown.time)) throw new Error(`cooldown.time must be a Number!`)
+    
+    const cooldown =
+      client.cooldowns.check(
+        message,
+        command
+      )
+    
+    if (!cooldown.allowed) {
+      return client.cooldownMessage(
+        message,
+        cooldown.remaining
+      )
+    }
+  }
+  
   try {
     await command.run(client, message, args)
   } catch(err) {
     message.reply(`:x: **|** FALHA INTERNA.`)
       .catch(() => {})
-    console.error(err)
+    client.error(err)
   }
 }
 
 async function handleBotMention(client, message) {
   if (message.content.replace("!", "") === `<@${client.user.id}>`) {
-    client.botMention(client, message)
+    await client.botMention(message)
   }
 }
 

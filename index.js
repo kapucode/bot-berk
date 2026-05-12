@@ -1,9 +1,19 @@
-require('dotenv').config()
-const client = require('./core/client.js')
+require('module-alias/register');
+const BotClient = require('@structures/Client.js')
 
-require('./core/handlers/indexPrefix.js')(client)
-require('./core/handlers/indexSlash.js')(client)
-require('./core/handlers/components.js')(client)
-require('./core/handlers/events.js')(client)
+require('dotenv').config()
+const client = new BotClient({
+  prefix: "'",
+  developers: ['1173408263920951356']
+})
+
+client.debug(`======================================`)
+client.debug(`HANDLERS INITIALIZATION`)
+client.debug(`======================================`)
+
+require('@handlers/indexPrefix.js')(client)
+require('@handlers/indexSlash.js')(client)
+require('@handlers/components.js')(client)
+require('@handlers/events.js')(client)
 
 client.login(process.env.BOT_TOKEN)

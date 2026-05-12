@@ -4,46 +4,40 @@ const path = require("path");
 module.exports = (client) => {
 
   try {
-    const eventsPath = path.join(__dirname, "../../src/events");
-
+    const eventsPath = path.join(__dirname, "../../events");
     const events = fs.readdirSync(eventsPath);
 
     events.forEach((eventFile) => {
-
       const eventPath = path.join(eventsPath, eventFile);
-
       const eventData = require(eventPath);
 
       if (!eventData?.name) return;
 
       if (eventData.once) {
-
         client.once(eventData.name, (...args) =>
           eventData.run(client, ...args)
         );
-
       } else {
-
         client.on(eventData.name, (...args) =>
           eventData.run(client, ...args)
         );
-
       }
-
+      
+      client.debug(`EVENT set: ${JSON.stringify(eventData, null, 2)}`)
     });
 
-    console.log("EVENTS carregados!");
+    client.info("EVENTS carregados!");
 
   } catch (err) {
-    console.error(err);
+    client.error(err);
   }
 
   process.on("unhandledRejection", (error) => {
-    console.error(error);
+    client.error(error);
   });
 
   process.on("uncaughtException", (error) => {
-    console.error(error);
+    client.error(error);
   });
 
 };

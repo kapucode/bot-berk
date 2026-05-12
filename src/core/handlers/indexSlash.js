@@ -4,35 +4,32 @@ const { Collection } = require("discord.js");
 
 module.exports = (client) => {
   try {
-    const slashPath = path.join(__dirname, "../../src/commandsSlash");
-
+    const slashPath = path.join(__dirname, "../../commandsSlash");
     const folders = fs.readdirSync(slashPath);
 
     folders.forEach((subFolder) => {
-
       const subFolderPath = path.join(slashPath, subFolder);
-
       const files = fs.readdirSync(subFolderPath);
 
       files.forEach((file) => {
-
         if (!file.endsWith(".js")) return;
 
         const filePath = path.join(subFolderPath, file);
+        const command = require(filePath);
 
-        const cmd = require(filePath);
+        if (!command?.data) return;
 
-        if (!cmd?.data) return;
-
-        client.slashCommands.set(cmd.data.name, cmd);
-
+        client.slashCommands.set(
+          command.data.name, 
+          command
+        );
+        
+        client.debug(`SLASHCOMMAND set: ${JSON.stringify(command, null, 2)}`)
       });
-
     });
 
-    console.log("SLASH COMMANDS carregados!");
-
+    client.info("SLASH COMMANDS carregados!");
   } catch (err) {
-    console.log(err);
+    client.error(err);
   }
 };

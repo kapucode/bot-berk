@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 const { REST, Routes } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -7,7 +9,7 @@ require("dotenv").config();
 const commands = [];
 
 try {
-  const slashPath = path.join(__dirname, "../../src/commandsSlash");
+  const slashPath = path.join(__dirname, "../../commandsSlash");
 
   const folders = fs.readdirSync(slashPath);
 
