@@ -27,7 +27,7 @@ class Messages {
         title='❌ | Falha no Sistema',
         color='#ff4d4d',
         description='Ocorreu um erro',
-        timestamp=true,
+        timestamp=Date.now(),
         ephemeral = true,
         embeds = []
       } = options

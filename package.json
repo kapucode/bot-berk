@@ -23,7 +23,8 @@
     "@handlers": "./src/core/handlers",
     "@database": "./src/core/database",
     "@utils": "./src/utils",
-    "@ui": "./src/ui"
+    "@ui": "./src/ui",
+    "@extensions": "./src/core/extensions"
   },
   "devDependencies": {
     "@types/node": "^25.7.0",

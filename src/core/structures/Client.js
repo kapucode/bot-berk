@@ -1,5 +1,11 @@
 const { Client, Collection } = require('discord.js')
-const Cooldowns = require('./Cooldowns')
+const Cooldowns = require('@structures/Cooldowns')
+
+require(`@extensions/TextChannel`)
+
+const {
+  WaitTimeoutError
+} = require('@structures/Errors')
 
 const crypto = require('node:crypto')
 
@@ -94,6 +100,35 @@ class BotClient extends Client {
     }
   
     return state.data
+  }
+  
+  // Await
+  waitFor(event, options={}) {
+    return new Promise((resolve, reject) => {
+      const {
+        filter = () => true,
+        timeout = 30000
+      } = options
+  
+      const listener = (...args) => {
+        if (!filter(...args)) return
+  
+        cleanup()
+        resolve(args.length === 1 ? args[0] : args)
+      }
+  
+      const cleanup = () => {
+        clearTimeout(timer)
+        this.off(event, listener)
+      }
+  
+      const timer = setTimeout(() => {
+        cleanup()
+        reject(new WaitTimeoutError())
+      }, timeout)
+  
+      this.on(event, listener)
+    })
   }
 }
 
