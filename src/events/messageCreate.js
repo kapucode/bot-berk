@@ -1,3 +1,5 @@
+const Messages = require('@ui/Messages')
+
 async function handleCommand(client, message) {
   if (!message.content.startsWith(client.prefix)) return
   
@@ -39,18 +41,14 @@ async function handleCommand(client, message) {
       )
     
     if (!cooldown.allowed) {
-      return client.cooldownMessage(
-        message,
-        cooldown.remaining
-      )
+      return Messages.errors.cooldown(message, Math.ceil(cooldown.remaining / 1000))
     }
   }
   
   try {
     await command.run(client, message, args)
   } catch(err) {
-    message.reply(`:x: **|** FALHA INTERNA.`)
-      .catch(() => {})
+    Messages.errors.internal(message)
     client.error(err)
   }
 }

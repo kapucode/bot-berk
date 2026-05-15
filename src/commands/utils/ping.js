@@ -5,6 +5,7 @@ module.exports = {
     time: 3000,
     scope: 'hybrid'
   },
+  
   run: async (client, message) => {
     message.reply({
       content: `🏓 **|** Pong! \`${client.ws.ping}\`ms`

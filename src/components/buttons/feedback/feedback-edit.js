@@ -1,24 +1,33 @@
 const {
-  SlashCommandBuilder,
   TextInputBuilder,
   TextInputStyle,
+  ActionRowBuilder
 } = require('discord.js')
-const Modal = require('@structures/Modal')
+const Modal = require('@structures/Modal.js')
+
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('modal_example')
-    .setDescription('Formulario'),
-  
-  run: async (client, interaction) => {
+  name: 'edit-feedback',
+  authorOnly: true,
+  execute: async (client, interaction, args) => {
+    const uuid = args[1]
+    
+    const data = client.getState('feedbacks', uuid)
+    
+    if (!data) {
+      return interaction.reply({
+        content: 'Feedback expirado.',
+        flags: MessageFlags.Ephemeral
+      })
+    }
+    
     const modal = new Modal()
-      .setCustomId('modal-feedback')
+      .setCustomId(`modal-feedback:${interaction.user.id}`)
       .setTitle('Seu Feedback')
       .setTextDisplay(`Pode nos ajudar dando seu feedback?`)
       .addFields(
         {
           label: 'Seu nome (Opcional)',
-          description: 'Nos diga seu nome',
           component: new TextInputBuilder()
             .setCustomId('name')
             .setStyle(TextInputStyle.Short)
@@ -26,6 +35,7 @@ module.exports = {
             .setRequired(false)
             .setMinLength(3)
             .setMaxLength(20)
+            .setValue(data.name)
         },
         {
           label: 'Seu feedback',
@@ -37,8 +47,20 @@ module.exports = {
             .setMinLength(3)
             .setMaxLength(500)
             .setRequired(true)
+            .setValue(data.feedbackText)
         }
       )
+    
+    client.debug(`===============================`)
+    client.debug(`FEEDBACK EDIT`)
+    client.debug(`===============================`)
+    client.debug(
+      `USER: ${interaction.user.id}`, 
+      JSON.stringify(data, null, 2), 
+      `UUID: ${uuid}`,
+      `ARGS: ${args}`,
+      `MODAL: ${JSON.stringify(modal, null, 2)}`
+    )
   
     await interaction.showModal(
       modal.build(interaction)

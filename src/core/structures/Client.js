@@ -38,14 +38,6 @@ class BotClient extends Client {
     })
       .catch(() => {})
   }
-
-  async cooldownMessage(ctx, remaining) {
-    return ctx.reply({
-      content:
-        `⏳ **|** Calma aí! Aguarde **${Math.ceil(remaining / 1000)}s** para usar esse comando novamente.`
-    })
-      .catch(() => {})
-  }
   
   // LOGS
   log(type, ...args) {

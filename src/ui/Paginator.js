@@ -5,6 +5,7 @@ const {
   EmbedBuilder,
   MessageFlags
 } = require('discord.js')
+const Messages = requirw('@ui/Messages')
 
 class Paginator {
   constructor({

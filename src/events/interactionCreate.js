@@ -1,6 +1,8 @@
 const { MessageFlags } = require('discord.js')
 const Discord = require('discord.js')
 
+const Messages = require('@ui/Messages')
+
 async function handleCommand(client, interaction) {
   if (interaction.type === Discord.InteractionType.ApplicationCommand) {
     const command = client.slashCommands.get(interaction.commandName)
@@ -49,14 +51,14 @@ async function handleCommand(client, interaction) {
           interaction,
           cooldown.remaining
         )
+        return Messages.errors.cooldown(interaction, Math.ceil(cooldown.remaining / 1000))
       }
     }
   
     try {
       await command.run(client, interaction)
     } catch(err) {
-      interaction.reply(`:x: **|** FALHA INTERNA.`)
-        .catch(() => {})
+      Messages.errors.internal(interaction)
       client.error(err)
     }
   }
@@ -112,7 +114,7 @@ module.exports = {
       await handleCommand(client, interaction)
       await handleInteraction(client, interaction)
     } catch (err) {
-      interaction.reply(`:x: **|** FALHA INTERNA.`)
+      Messages.errors.internal(interaction)
       client.error(err)
     }
   }

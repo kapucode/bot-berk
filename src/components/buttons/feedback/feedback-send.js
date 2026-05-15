@@ -1,3 +1,8 @@
+const {
+  EmbedBuilder,
+  MessageFlags
+} = require('discord.js')
+
 module.exports = {
   name: 'feedback-send',
   authorOnly: true,
@@ -11,15 +16,26 @@ module.exports = {
     if (!data) {
       return interaction.reply({
         content: 'Feedback expirado.',
-        ephemeral: true
+        flags: MessageFlags.Ephemeral
       })
     }
-
-    interaction.reply(`Nome: ${data.name}
-Feedback: 
+    
+    const embed = new EmbedBuilder()
+        .setTitle(`Feedback de ${data.name}`)
+        .setColor(0x5b81df)
+        .setDescription(`
 \`\`\`
-${data.feedback}
+${data.feedbackText}
 \`\`\`
 `)
+    
+    client.debug(`==============================`)
+    client.debug(`FEEDBACK SEND MSG`)
+    client.debug(`==============================`)
+    client.debug(`USER: ${interaction.user.id}`, JSON.stringify(data, null, 2), `UUID: ${uuid}`)
+    
+    interaction.reply({
+      embeds: [embed]
+    })
   }
 }

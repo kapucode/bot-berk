@@ -14,8 +14,8 @@ class Modal {
     this.title =
       options.title || 'Sem título'
 
-    this.components =
-      options.components || []
+    this.fields =
+      options.fields || []
     
     this.textDisplay = options.textDisplay
       ? new TextDisplayBuilder()
@@ -42,7 +42,7 @@ class Modal {
   
   addFields(...fields) {
     if (
-      this.components.length + fields.length > 5
+      this.fields.length + fields.length > 5
     ) {
       throw new Error(
         'Modal can only have 5 components.'
@@ -92,7 +92,7 @@ class Modal {
   
       label[method](component)
   
-      this.components.push(label)
+      this.fields.push(label)
     }
   
     return this
@@ -102,7 +102,7 @@ class Modal {
 
     const modal = new ModalBuilder()
         .setCustomId(
-          `${this.customId}:${interaction.user.id}`
+          `${this.customId}`
         )
         .setTitle(this.title)
     
@@ -110,7 +110,7 @@ class Modal {
       modal.addTextDisplayComponents(this.textDisplay)
     }
     
-    modal.addLabelComponents(...this.components)
+    modal.addLabelComponents(...this.fields)
     
 
     return modal
