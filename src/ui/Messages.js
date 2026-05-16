@@ -225,6 +225,15 @@ class Messages {
       })
     }
   }
+  
+  static geral = class {
+    static async botMention(ctx, prefix) {
+      return ctx.reply({
+        content: `💫 **|** Olá! Meu prefixo é \`${prefix}\``
+      })
+        .catch(() => {})
+    }
+  }
 }
 
 module.exports = Messages

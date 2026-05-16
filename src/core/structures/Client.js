@@ -37,13 +37,6 @@ class BotClient extends Client {
       feedbacks: new Map()
     }
   }
-
-  async botMention(ctx) {
-    return ctx.reply({
-      content: `💫 **|** Olá! Meu prefixo é \`${this.prefix}\``
-    })
-      .catch(() => {})
-  }
   
   // LOGS
   log(type, ...args) {

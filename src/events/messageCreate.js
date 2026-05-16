@@ -55,7 +55,7 @@ async function handleCommand(client, message) {
 
 async function handleBotMention(client, message) {
   if (message.content.replace("!", "") === `<@${client.user.id}>`) {
-    await client.botMention(message)
+    await Messages.geral.botMention(message, client.prefix)
   }
 }
 
