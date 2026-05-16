@@ -1,5 +1,5 @@
 # Base Bot Discord usando Discord.js
-Uma simples base de bot, facilitando a criação de comandos (usando handlers) e slash & subcommands.
+Uma simples base de bot, facilitando a criação de comandos (usando handlers) e slash & subcommands. A base também possui estruturas de UI pré-criadas para melhor fluxo do código, além de facilitar o trabalho do programador.
 - Antes de tudo, lembre-se de ter o Node.js e o NPM instalados em sua máquina.
 
 ## Instalação 
