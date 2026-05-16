@@ -2,12 +2,12 @@ module.exports = {
   name: 'sayName',
   
   run: async (client, message) => {
-    message.reply(`Me diga seu nome!`)
+    message.reply(`Envie uma mensagem me dizendo seu nome!`)
     
     const name = await message.channel.awaitResponse({
       user: message.author
     })
     
-    message.reply(`Olá, ${name}!`)
+    message.reply(`Olá, **${name}!**`)
   }
 }

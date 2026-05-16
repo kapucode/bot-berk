@@ -1,38 +1,27 @@
-const { TextChannel } = require('discord.js')
+const { TextChannel } = require('discord.js');
 
-TextChannel.prototype.awaitResponse = function(options={}) {
+TextChannel.prototype.awaitResponse = function(options = {}) {
   const {
     user,
-    timeout = 30000,
+    time = 30000,
     filter = () => true
-  } = options
-  
-  return this.client.waitFor('messageCreate', {
-    timeout,
+  } = options;
+
+  return this.awaitMessages({
+    time,
+    max: 1,
 
     filter: msg => {
-      const commandName = msg.content
-        .slice(this.client.prefix.length)
-        .trim()
-        .split(" ")
-        [0].toLowerCase()
-      const command =
-        this.client.commands.has(commandName) ||
-        this.client.aliases.has(commandName);
-      
-      if (msg.channel.id !== this.id) {
-        return false
-      }
-
       if (user && msg.author.id !== user.id) {
-        return false
-      }
-      
-      if (command) {
-        return false
+        return false;
       }
 
-      return filter(msg)
+      if (msg.author.bot) {
+        return false;
+      }
+
+      return filter(msg);
     }
   })
-}
+    .then(collected => collected.first());
+};
