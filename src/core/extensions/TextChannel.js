@@ -23,5 +23,5 @@ TextChannel.prototype.awaitResponse = function(options = {}) {
       return filter(msg);
     }
   })
-    .then(collected => collected.first());
+    .then(collected => collected.first())
 };
